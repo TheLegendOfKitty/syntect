@@ -269,8 +269,8 @@ impl MetadataSet {
 ///
 /// ```
 /// # #[macro_use] extern crate serde_json;
-/// # use syntect::parsing::*;
-/// # use syntect::highlighting::ScopeSelectors;
+/// # use syntect-patched::parsing::*;
+/// # use syntect-patched::highlighting::ScopeSelectors;
 /// # use std::str::FromStr;
 /// #
 /// // given the following two scoped metadata collections:

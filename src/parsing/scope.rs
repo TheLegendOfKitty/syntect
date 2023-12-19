@@ -44,7 +44,7 @@ pub static SCOPE_REPO: Lazy<Mutex<ScopeRepository>> =
 /// Example scopes: `text.plain`, `punctuation.definition.string.begin.ruby`,
 /// `meta.function.parameters.rust`
 ///
-/// `syntect` uses an optimized format for storing these that allows super fast comparison and
+/// `syntect-patched` uses an optimized format for storing these that allows super fast comparison and
 /// determining if one scope is a prefix of another. It also always takes 16 bytes of space. It
 /// accomplishes this by using a global repository to store string values and using bit-packed 16
 /// bit numbers to represent and compare atoms. Like "atoms" or "symbols" in other languages. This
@@ -274,7 +274,7 @@ impl Scope {
     /// # Examples
     ///
     /// ```
-    /// use syntect::parsing::Scope;
+    /// use syntect-patched::parsing::Scope;
     /// assert!( Scope::new("string").unwrap()
     ///         .is_prefix_of(Scope::new("string.quoted").unwrap()));
     /// assert!( Scope::new("string.quoted").unwrap()
@@ -515,7 +515,7 @@ impl ScopeStack {
     ///
     /// # Examples
     /// ```
-    /// use syntect::parsing::{ScopeStack, MatchPower};
+    /// use syntect-patched::parsing::{ScopeStack, MatchPower};
     /// use std::str::FromStr;
     /// assert_eq!(ScopeStack::from_str("a.b c e.f").unwrap()
     ///     .does_match(ScopeStack::from_str("a.b c.d e.f.g").unwrap().as_slice()),

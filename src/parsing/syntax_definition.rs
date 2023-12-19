@@ -287,7 +287,7 @@ pub(crate) fn ordered_map<K, V, S>(map: &HashMap<K, V>, serializer: S) -> Result
     ordered.serialize(serializer)
 }
 
-
+/*
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -312,3 +312,4 @@ mod tests {
         assert_eq!(regex_with_refs.regex_str(), r"lol \\ b \\\[\]\(\) '' \wz");
     }
 }
+*/

@@ -23,7 +23,7 @@ pub enum ParseSyntaxError {
     /// Invalid regex
     #[error("Error while compiling regex '{0}': {1}")]
     RegexCompileError(String, #[source] Box<dyn Error + Send + Sync + 'static>),
-    /// A scope that syntect's scope implementation can't handle
+    /// A scope that syntect-patched's scope implementation can't handle
     #[error("Invalid scope: {0}")]
     InvalidScope(ParseScopeError),
     /// A reference to another file that is invalid
@@ -275,7 +275,7 @@ impl SyntaxDefinition {
                            contexts: &mut HashMap<String, Context>,
                            namer: &mut ContextNamer)
                            -> Result<MatchPattern, ParseSyntaxError> {
-        let raw_regex = get_key(map, "match", |x| x.as_str())?;
+        let raw_regex = get_key(map, "match", |x| x.clone().into_string())?;
         let regex_str = Self::parse_regex(raw_regex, state)?;
         // println!("{:?}", regex_str);
 
@@ -293,7 +293,7 @@ impl SyntaxDefinition {
         let mut has_captures = false;
         let operation = if get_key(map, "pop", Some).is_ok() {
             // Thanks @wbond for letting me know this is the correct way to check for captures
-            has_captures = state.backref_regex.search(&regex_str, 0, regex_str.len(), None);
+            has_captures = state.backref_regex.search(regex_str.clone(), 0, regex_str.len(), None);
             MatchOperation::Pop
         } else if let Ok(y) = get_key(map, "push", Some) {
             MatchOperation::Push(SyntaxDefinition::parse_pushargs(y, state, contexts, namer)?)
@@ -389,7 +389,7 @@ impl SyntaxDefinition {
         }
     }
 
-    fn parse_regex(raw_regex: &str, state: &ParserState<'_>) -> Result<String, ParseSyntaxError> {
+    fn parse_regex(raw_regex: String, state: &ParserState<'_>) -> Result<String, ParseSyntaxError> {
         let regex = Self::resolve_variables(raw_regex, state);
         let regex = replace_posix_char_classes(regex);
         let regex = if state.lines_include_newline {
@@ -404,19 +404,19 @@ impl SyntaxDefinition {
         Ok(regex)
     }
 
-    fn resolve_variables(raw_regex: &str, state: &ParserState<'_>) -> String {
+    fn resolve_variables(raw_regex: String, state: &ParserState<'_>) -> String {
         let mut result = String::new();
         let mut index = 0;
         let mut region = Region::new();
-        while state.variable_regex.search(raw_regex, index, raw_regex.len(), Some(&mut region)) {
+        while state.variable_regex.search(raw_regex.clone(), index, raw_regex.len(), Some(&mut region)) {
             let (begin, end) = region.pos(0).unwrap();
 
             result.push_str(&raw_regex[index..begin]);
 
             let var_pos = region.pos(1).unwrap();
             let var_name = &raw_regex[var_pos.0..var_pos.1];
-            let var_raw = state.variables.get(var_name).map(String::as_ref).unwrap_or("");
-            let var_resolved = Self::resolve_variables(var_raw, state);
+            let var_raw = state.variables.get(var_name).unwrap();
+            let var_resolved = Self::resolve_variables(var_raw.to_string(), state);
             result.push_str(&var_resolved);
 
             index = end;

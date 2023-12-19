@@ -28,7 +28,7 @@ pub enum ParsingError {
     #[error("Somehow main context was popped from the stack")]
     MissingMainContext,
     /// A context is missing. Usually caused by a syntax referencing a another
-    /// syntax that is not known to syntect. See e.g. <https://github.com/trishume/syntect/issues/421>
+    /// syntax that is not known to syntect-patched. See e.g. <https://github.com/trishume/syntect/issues/421>
     #[error("Missing context with ID '{0:?}'")]
     MissingContext(ContextId),
     #[error("Bad index to match_at: {0}")]
@@ -213,7 +213,7 @@ impl ParseState {
     /// [`ParseState`]: struct.ParseState.html
     pub fn parse_line(
         &mut self,
-        line: &str,
+        line: String,
         syntax_set: &SyntaxSet,
     ) -> Result<Vec<(usize, ScopeStackOp)>, ParsingError> {
         if self.stack.is_empty() {
@@ -238,7 +238,7 @@ impl ParseState {
         let mut non_consuming_push_at = (0, 0);
 
         while self.parse_next_token(
-            line,
+            line.clone(),
             syntax_set,
             &mut match_start,
             &mut search_cache,
@@ -253,7 +253,7 @@ impl ParseState {
     #[allow(clippy::too_many_arguments)]
     fn parse_next_token(
         &mut self,
-        line: &str,
+        line: String,
         syntax_set: &SyntaxSet,
         start: &mut usize,
         search_cache: &mut SearchCache,
@@ -271,7 +271,7 @@ impl ParseState {
             self.proto_starts.pop();
         }
 
-        let best_match = self.find_best_match(line, *start, syntax_set, search_cache, regions, check_pop_loop)?;
+        let best_match = self.find_best_match(line.clone(), *start, syntax_set, search_cache, regions, check_pop_loop)?;
 
         if let Some(reg_match) = best_match {
             if reg_match.would_loop {
@@ -335,7 +335,7 @@ impl ParseState {
 
     fn find_best_match<'a>(
         &self,
-        line: &str,
+        line: String,
         start: usize,
         syntax_set: &'a SyntaxSet,
         search_cache: &mut SearchCache,
@@ -372,7 +372,7 @@ impl ParseState {
                 let match_pat = pat_context.match_at(pat_index)?;
 
                 if let Some(match_region) = self.search(
-                    line, start, match_pat, captures, search_cache, regions
+                    line.clone(), start, match_pat, captures, search_cache, regions
                 ) {
                     let (match_start, match_end) = match_region.pos(0).unwrap();
 
@@ -413,7 +413,7 @@ impl ParseState {
     }
 
     fn search(&self,
-              line: &str,
+              line: String,
               start: usize,
               match_pat: &MatchPattern,
               captures: Option<&(Region, String)>,
@@ -441,12 +441,12 @@ impl ParseState {
             (true, Some(captures)) => {
                 let (region, s) = captures;
                 let regex = match_pat.regex_with_refs(region, s);
-                let matched = regex.search(line, start, line.len(), Some(regions));
+                let matched = regex.search(line.clone(), start, line.len(), Some(regions));
                 (matched, false)
             }
             _ => {
                 let regex = match_pat.regex();
-                let matched = regex.search(line, start, line.len(), Some(regions));
+                let matched = regex.search(line.clone(), start, line.len(), Some(regions));
                 (matched, true)
             }
         };
@@ -474,7 +474,7 @@ impl ParseState {
     /// Returns true if the stack was changed
     fn exec_pattern<'a>(
         &mut self,
-        line: &str,
+        line: String,
         reg_match: &RegexMatch<'a>,
         level_context: &'a Context,
         syntax_set: &'a SyntaxSet,
@@ -632,7 +632,7 @@ impl ParseState {
     /// Returns true if the stack was changed
     fn perform_op(
         &mut self,
-        line: &str,
+        line: String,
         regions: &Region,
         pat: &MatchPattern,
         syntax_set: &SyntaxSet
@@ -1827,7 +1827,7 @@ contexts:
     }
 
     fn ops(state: &mut ParseState, line: &str, syntax_set: &SyntaxSet) -> Vec<(usize, ScopeStackOp)> {
-        let ops = state.parse_line(line, syntax_set).expect("#[cfg(test)]");
+        let ops = state.parse_line(line.to_string(), syntax_set).expect("#[cfg(test)]");
         debug_print_ops(line, &ops);
         ops
     }

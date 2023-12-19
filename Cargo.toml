@@ -14,7 +14,8 @@ exclude = [
     "testdata/*",
     "/scripts/*",
     "/Makefile",
-    "/codecov.yml"
+    "/codecov.yml",
+    "/examples/*"
 ]
 
 [dependencies]

@@ -1,7 +1,7 @@
 //! Methods for dumping serializable structs to a compressed binary format,
 //! used to allow fast startup times
 //!
-//! Currently syntect serializes [`SyntaxSet`] structs with [`dump_to_uncompressed_file`]
+//! Currently syntect-patched serializes [`SyntaxSet`] structs with [`dump_to_uncompressed_file`]
 //! into `.packdump` files and likewise [`ThemeSet`] structs to `.themedump` files with [`dump_to_file`].
 //!
 //! You can use these methods to manage your own caching of compiled syntaxes and

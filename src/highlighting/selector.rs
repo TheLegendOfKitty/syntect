@@ -88,8 +88,8 @@ impl ScopeSelectors {
     /// # Examples
     ///
     /// ```
-    /// use syntect::parsing::{ScopeStack, MatchPower};
-    /// use syntect::highlighting::ScopeSelectors;
+    /// use syntect-patched::parsing::{ScopeStack, MatchPower};
+    /// use syntect-patched::highlighting::ScopeSelectors;
     /// use std::str::FromStr;
     /// assert_eq!(ScopeSelectors::from_str("a.b, a e.f - c k, e.f - a.b").unwrap()
     ///     .does_match(ScopeStack::from_str("a.b c.d j e.f").unwrap().as_slice()),

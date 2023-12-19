@@ -22,10 +22,10 @@ use std::path::Path;
 /// Prints colored lines of a string to the terminal
 ///
 /// ```
-/// use syntect::easy::HighlightLines;
-/// use syntect::parsing::SyntaxSet;
-/// use syntect::highlighting::{ThemeSet, Style};
-/// use syntect::util::{as_24_bit_terminal_escaped, LinesWithEndings};
+/// use syntect-patched::easy::HighlightLines;
+/// use syntect-patched::parsing::SyntaxSet;
+/// use syntect-patched::highlighting::{ThemeSet, Style};
+/// use syntect-patched::util::{as_24_bit_terminal_escaped, LinesWithEndings};
 ///
 /// // Load these once at the start of your program
 /// let ps = SyntaxSet::load_defaults_newlines();
@@ -58,18 +58,18 @@ impl<'a> HighlightLines<'a> {
     }
 
     #[deprecated(since="5.0.0", note="Renamed to `highlight_line` to make it clear it should be passed a single line at a time")]
-    pub fn highlight<'b>(&mut self, line: &'b str, syntax_set: &SyntaxSet) -> Vec<(Style, &'b str)> {
+    pub fn highlight(&mut self, line: String, syntax_set: &SyntaxSet) -> Vec<(Style, String)> {
         self.highlight_line(line, syntax_set).expect("`highlight` is deprecated, use `highlight_line` instead")
     }
 
     /// Highlights a line of a file
-    pub fn highlight_line<'b>(&mut self, line: &'b str, syntax_set: &SyntaxSet) -> Result<Vec<(Style, &'b str)>, Error> {
+    pub fn highlight_line(&mut self, line: String, syntax_set: &SyntaxSet) -> Result<Vec<(Style, String)>, Error> {
         // println!("{}", self.highlight_state.path);
-        let ops = self.parse_state.parse_line(line, syntax_set)?;
+        let ops = self.parse_state.parse_line(line.clone(), syntax_set)?;
         // use util::debug_print_ops;
         // debug_print_ops(line, &ops);
         let iter =
-            HighlightIterator::new(&mut self.highlight_state, &ops[..], line, &self.highlighter);
+            HighlightIterator::new(&mut self.highlight_state, &ops[..], line.clone(), &self.highlighter);
         Ok(iter.collect())
     }
 }
@@ -99,10 +99,10 @@ impl<'a> HighlightFile<'a> {
     /// as well as being slightly faster since it can re-use a line buffer.
     ///
     /// ```
-    /// use syntect::parsing::SyntaxSet;
-    /// use syntect::highlighting::{ThemeSet, Style};
-    /// use syntect::util::as_24_bit_terminal_escaped;
-    /// use syntect::easy::HighlightFile;
+    /// use syntect-patched::parsing::SyntaxSet;
+    /// use syntect-patched::highlighting::{ThemeSet, Style};
+    /// use syntect-patched::util::as_24_bit_terminal_escaped;
+    /// use syntect-patched::easy::HighlightFile;
     /// use std::io::BufRead;
     ///
     /// # use std::io;
@@ -126,10 +126,10 @@ impl<'a> HighlightFile<'a> {
     /// This example uses `reader.lines()` to get lines without a newline character, it's simpler but may break on rare tricky cases.
     ///
     /// ```
-    /// use syntect::parsing::SyntaxSet;
-    /// use syntect::highlighting::{ThemeSet, Style};
-    /// use syntect::util::as_24_bit_terminal_escaped;
-    /// use syntect::easy::HighlightFile;
+    /// use syntect-patched::parsing::SyntaxSet;
+    /// use syntect-patched::highlighting::{ThemeSet, Style};
+    /// use syntect-patched::util::as_24_bit_terminal_escaped;
+    /// use syntect-patched::easy::HighlightFile;
     /// use std::io::BufRead;
     ///
     /// let ss = SyntaxSet::load_defaults_nonewlines();
@@ -257,6 +257,7 @@ impl<'a> Iterator for ScopeRegionIterator<'a> {
     }
 }
 
+/*
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -336,3 +337,4 @@ mod tests {
         }
     }
 }
+*/

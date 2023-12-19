@@ -1,12 +1,12 @@
-//! Welcome to the syntect docs.
+//! Welcome to the syntect-patched docs.
 //!
-//! Much more info about syntect is available on the [Github Page](https://github.com/trishume/syntect).
+//! Much more info about syntect-patched is available on the [Github Page](https://github.com/trishume/syntect).
 //!
 //! May I suggest that you start by reading the `Readme.md` file in the main repo.
 //! Once you're done with that you can look at the docs for [`parsing::SyntaxSet`]
 //! and for the [`easy`] module.
 //!
-//! Almost everything in syntect is divided up into either the [`parsing`] module
+//! Almost everything in syntect-patched is divided up into either the [`parsing`] module
 //! for turning text into text annotated with scopes, and the [`highlighting`] module
 //! for turning annotated text into styled/colored text.
 //!
@@ -43,7 +43,7 @@ use std::io::Error as IoError;
 #[cfg(feature = "plist-load")]
 use crate::highlighting::{ParseThemeError, SettingsError};
 
-/// An error enum for all things that can go wrong within syntect.
+/// An error enum for all things that can go wrong within syntect-patched.
 #[derive(Debug, thiserror::Error)]
 #[non_exhaustive]
 pub enum Error {

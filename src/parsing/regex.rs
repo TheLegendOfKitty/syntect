@@ -55,7 +55,7 @@ impl Regex {
     /// [`Region`]: struct.Region.html
     pub fn search(
         &self,
-        text: &str,
+        text: String,
         begin: usize,
         end: usize,
         region: Option<&mut Region>,
@@ -165,7 +165,7 @@ mod regex_impl {
 
         pub fn search(
             &self,
-            text: &str,
+            text: String,
             begin: usize,
             end: usize,
             region: Option<&mut Region>,

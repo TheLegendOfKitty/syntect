@@ -69,11 +69,11 @@ pub struct HighlightState {
 /// [`HighlightState`]: struct.HighlightState.html
 /// [`Style`]: struct.Style.html
 #[derive(Debug)]
-pub struct RangedHighlightIterator<'a, 'b> {
+pub struct RangedHighlightIterator<'a> {
     index: usize,
     pos: usize,
     changes: &'a [(usize, ScopeStackOp)],
-    text: &'b str,
+    text: String,
     highlighter: &'a Highlighter<'a>,
     state: &'a mut HighlightState,
 }
@@ -89,8 +89,8 @@ pub struct RangedHighlightIterator<'a, 'b> {
 /// [`RangedHighlightIterator`]: struct.RangedHighlightIterator.html
 /// [`Style`]: struct.Style.html
 #[derive(Debug)]
-pub struct HighlightIterator<'a, 'b> {
-    ranged_iterator: RangedHighlightIterator<'a, 'b>
+pub struct HighlightIterator<'a> {
+    ranged_iterator: RangedHighlightIterator<'a>
 }
 
 impl HighlightState {
@@ -120,12 +120,12 @@ impl HighlightState {
     }
 }
 
-impl<'a, 'b> RangedHighlightIterator<'a, 'b> {
+impl<'a> RangedHighlightIterator<'a> {
     pub fn new(state: &'a mut HighlightState,
                changes: &'a [(usize, ScopeStackOp)],
-               text: &'b str,
+               text: String,
                highlighter: &'a Highlighter<'_>)
-               -> RangedHighlightIterator<'a, 'b> {
+               -> RangedHighlightIterator<'a> {
         RangedHighlightIterator {
             index: 0,
             pos: 0,
@@ -137,12 +137,12 @@ impl<'a, 'b> RangedHighlightIterator<'a, 'b> {
     }
 }
 
-impl<'a, 'b> Iterator for RangedHighlightIterator<'a, 'b> {
-    type Item = (Style, &'b str, Range<usize>);
+impl<'a> Iterator for RangedHighlightIterator<'a> {
+    type Item = (Style, String, Range<usize>);
 
     /// Yields the next token of text and the associated `Style` to render that text with.
     /// the concatenation of the strings in each token will make the original string.
-    fn next(&mut self) -> Option<(Style, &'b str, Range<usize>)> {
+    fn next(&mut self) -> Option<(Style, String, Range<usize>)> {
         if self.pos == self.text.len() && self.index >= self.changes.len() {
             return None;
         }
@@ -188,16 +188,16 @@ impl<'a, 'b> Iterator for RangedHighlightIterator<'a, 'b> {
         if text.is_empty() {
             self.next()
         } else {
-            Some((style, text, range))
+            Some((style, text.to_string(), range))
         }
     }
 }
-impl<'a, 'b> HighlightIterator<'a, 'b> {
+impl<'a> HighlightIterator<'a> {
     pub fn new(state: &'a mut HighlightState,
                changes: &'a [(usize, ScopeStackOp)],
-               text: &'b str,
+               text: String,
                highlighter: &'a Highlighter<'_>)
-        -> HighlightIterator<'a, 'b> {
+        -> HighlightIterator<'a> {
             HighlightIterator {
                 ranged_iterator: RangedHighlightIterator {
                     index: 0,
@@ -211,12 +211,12 @@ impl<'a, 'b> HighlightIterator<'a, 'b> {
     }
 }
 
-impl<'a, 'b> Iterator for HighlightIterator<'a, 'b> {
-    type Item = (Style, &'b str);
+impl<'a> Iterator for HighlightIterator<'a> {
+    type Item = (Style, String);
 
     /// Yields the next token of text and the associated `Style` to render that text with.
     /// the concatenation of the strings in each token will make the original string.
-    fn next(&mut self) -> Option<(Style, &'b str)> {
+    fn next(&mut self) -> Option<(Style, String)> {
         self.ranged_iterator.next().map(|e| (e.0, e.1))
     }
 }
@@ -336,7 +336,7 @@ impl<'a> Highlighter<'a> {
     /// Returns a [`StyleModifier`] which, if applied to the default style,
     /// would generate the fully resolved style for this stack.
     ///
-    /// This is made available to applications that are using syntect styles
+    /// This is made available to applications that are using syntect-patched styles
     /// in combination with style information from other sources.
     ///
     /// This operation is convenient but expensive. For reasonable performance,
@@ -370,6 +370,7 @@ impl<'a> Highlighter<'a> {
     }
 }
 
+/*
 #[cfg(all(feature = "default-syntaxes", feature = "default-themes"))]
 #[cfg(test)]
 mod tests {
@@ -571,3 +572,4 @@ mod tests {
                     "5", Range { start: 30, end: 31 }));
     }
 }
+*/

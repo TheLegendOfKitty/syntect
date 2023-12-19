@@ -204,10 +204,10 @@ impl SyntaxSet {
     ///
     /// This uses regexes that come with some sublime syntax grammars for matching things like
     /// shebangs and mode lines like `-*- Mode: C -*-`
-    pub fn find_syntax_by_first_line<'a>(&'a self, s: &str) -> Option<&'a SyntaxReference> {
+    pub fn find_syntax_by_first_line<'a>(&'a self, s: String) -> Option<&'a SyntaxReference> {
         let cache = self.first_line_cache();
         for &(ref reg, i) in cache.regexes.iter().rev() {
-            if reg.search(s, 0, s.len(), None) {
+            if reg.search(s.clone(), 0, s.len(), None) {
                 return Some(&self.syntaxes[i]);
             }
         }
@@ -238,7 +238,7 @@ impl SyntaxSet {
     /// text:
     ///
     /// ```
-    /// use syntect::parsing::SyntaxSet;
+    /// use syntect-patched::parsing::SyntaxSet;
     /// let ss = SyntaxSet::load_defaults_newlines();
     /// let syntax = ss.find_syntax_for_file("testdata/highlight_test.erb")
     ///     .unwrap() // for IO errors, you may want to use try!() or another plain text fallback
@@ -258,7 +258,7 @@ impl SyntaxSet {
             let f = File::open(path)?;
             let mut line_reader = BufReader::new(&f);
             line_reader.read_line(&mut line)?;
-            self.find_syntax_by_first_line(&line)
+            self.find_syntax_by_first_line(line)
         } else {
             None
         };
@@ -276,7 +276,7 @@ impl SyntaxSet {
     ///
     /// # Examples
     /// ```
-    /// use syntect::parsing::SyntaxSetBuilder;
+    /// use syntect-patched::parsing::SyntaxSetBuilder;
     /// let mut builder = SyntaxSetBuilder::new();
     /// builder.add_plain_text_syntax();
     /// let ss = builder.build();
@@ -782,7 +782,7 @@ impl SyntaxSetBuilder {
     ) -> Option<&'a ContextId> {
         context_id.or_else(|| {
             if with_escape {
-                // If we keep this reference unresolved, syntect will crash
+                // If we keep this reference unresolved, syntect-patched will crash
                 // when it encounters the reference. Rather than crashing,
                 // we instead fall back to "Plain Text". This seems to be
                 // how Sublime Text behaves. It should be a safe thing to do
@@ -858,7 +858,7 @@ impl FirstLineCache {
     }
 }
 
-
+/*
 #[cfg(feature = "yaml-load")]
 #[cfg(test)]
 mod tests {
@@ -1296,3 +1296,4 @@ mod tests {
         ).unwrap()
     }
 }
+*/

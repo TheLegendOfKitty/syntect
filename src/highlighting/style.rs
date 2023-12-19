@@ -33,7 +33,7 @@ pub struct StyleModifier {
 ///
 /// Because these numbers come directly from the theme, you might have to do your own color space
 /// conversion if you're outputting a different color space from the theme. This can be a problem
-/// because some Sublime themes use sRGB and some don't. This is specified in an attribute syntect
+/// because some Sublime themes use sRGB and some don't. This is specified in an attribute syntect-patched
 /// doesn't parse yet.
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct Color {

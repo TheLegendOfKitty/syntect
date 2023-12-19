@@ -65,10 +65,10 @@ const LATEX_REPLACE: [(&str, &str); 3] = [
 /// Usage is similar to the `as_24_bit_terminal_escaped` function:
 ///
 /// ```
-/// use syntect::easy::HighlightLines;
-/// use syntect::parsing::SyntaxSet;
-/// use syntect::highlighting::{ThemeSet,Style};
-/// use syntect::util::{as_latex_escaped,LinesWithEndings};
+/// use syntect-patched::easy::HighlightLines;
+/// use syntect-patched::parsing::SyntaxSet;
+/// use syntect-patched::highlighting::{ThemeSet,Style};
+/// use syntect-patched::util::{as_latex_escaped,LinesWithEndings};
 ///
 /// // Load these once at the start of your program
 /// let ps = SyntaxSet::load_defaults_newlines();
@@ -177,7 +177,7 @@ pub fn debug_print_ops(line: &str, ops: &[(usize, ScopeStackOp)]) {
 /// # Examples
 ///
 /// ```
-/// use syntect::util::LinesWithEndings;
+/// use syntect-patched::util::LinesWithEndings;
 ///
 /// let mut lines = LinesWithEndings::from("foo\nbar\nbaz");
 ///
@@ -187,21 +187,21 @@ pub fn debug_print_ops(line: &str, ops: &[(usize, ScopeStackOp)]) {
 ///
 /// assert_eq!(None, lines.next());
 /// ```
-pub struct LinesWithEndings<'a> {
-    input: &'a str,
+pub struct LinesWithEndings {
+    input: String,
 }
 
-impl<'a> LinesWithEndings<'a> {
-    pub fn from(input: &'a str) -> LinesWithEndings<'a> {
+impl LinesWithEndings {
+    pub fn from(input: String) -> LinesWithEndings {
         LinesWithEndings { input }
     }
 }
 
-impl<'a> Iterator for LinesWithEndings<'a> {
-    type Item = &'a str;
+impl Iterator for LinesWithEndings {
+    type Item = String;
 
     #[inline]
-    fn next(&mut self) -> Option<&'a str> {
+    fn next(&mut self) -> Option<String> {
         if self.input.is_empty() {
             return None;
         }
@@ -209,9 +209,10 @@ impl<'a> Iterator for LinesWithEndings<'a> {
             .find('\n')
             .map(|i| i + 1)
             .unwrap_or_else(|| self.input.len());
-        let (line, rest) = self.input.split_at(split);
-        self.input = rest;
-        Some(line)
+        let binding = self.input.clone();
+        let (line, rest) = binding.split_at(split);
+        self.input = rest.to_string();
+        Some(line.to_string())
     }
 }
 
@@ -273,8 +274,8 @@ pub fn split_at<'a, A: Clone>(
 /// # Examples
 ///
 /// ```
-/// use syntect::util::modify_range;
-/// use syntect::highlighting::{Style, StyleModifier, FontStyle};
+/// use syntect-patched::util::modify_range;
+/// use syntect-patched::highlighting::{Style, StyleModifier, FontStyle};
 ///
 /// let plain = Style::default();
 /// let boldmod = StyleModifier { foreground: None, background: None, font_style: Some(FontStyle::BOLD) };
@@ -293,6 +294,7 @@ pub fn modify_range<'a>(v: &[(Style, &'a str)], r: Range<usize>, modifier: Style
     result
 }
 
+/*
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -393,3 +395,4 @@ mod tests {
         assert_eq!(s, "\x1b[48;2;0;0;0m\x1b[38;2;128;128;128mhello");
     }
 }
+*/

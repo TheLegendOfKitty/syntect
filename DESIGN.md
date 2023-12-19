@@ -66,17 +66,17 @@ $cargo run --release --example syncat testdata/jquery.js | grep cmiss | wc -l
      Running `target/release/examples/syncat testdata/jquery.js`
    61266
 $cargo run --release --example syncat testdata/jquery.js | grep ptoken | wc -l
-   Compiling syntect v0.1.0 (file:///Users/tristan/Box/Dev/Projects/syntect)
+   Compiling syntect-patched v0.1.0 (file:///Users/tristan/Box/Dev/Projects/syntect-patched)
      Running `target/release/examples/syncat testdata/jquery.js`
    98714
 $wc -l testdata/jquery.js
     9210 testdata/jquery.js
 $cargo run --release --example syncat testdata/jquery.js | grep cclear | wc -l
-   Compiling syntect v0.1.0 (file:///Users/tristan/Box/Dev/Projects/syntect)
+   Compiling syntect-patched v0.1.0 (file:///Users/tristan/Box/Dev/Projects/syntect-patched)
      Running `target/release/examples/syncat testdata/jquery.js`
    71302
 $cargo run --release --example syncat testdata/jquery.js | grep freshcachetoken | wc -l
-    Compiling syntect v0.1.0 (file:///Users/tristan/Box/Dev/Projects/syntect)
+    Compiling syntect-patched v0.1.0 (file:///Users/tristan/Box/Dev/Projects/syntect-patched)
       Running `target/release/examples/syncat testdata/jquery.js`
    80512
 # On stats-2 branch
@@ -87,16 +87,16 @@ $cargo run --example syncat testdata/jquery.js | grep regsearch | wc -l
      Running `target/debug/examples/syncat testdata/jquery.js`
  2862948
 $cargo run --example syncat testdata/jquery.js | grep regmatch | wc -l
-   Compiling syntect v0.6.0 (file:///Users/tristan/Box/Dev/Projects/syntect)
+   Compiling syntect-patched v0.6.0 (file:///Users/tristan/Box/Dev/Projects/syntect-patched)
      Running `target/debug/examples/syncat testdata/jquery.js`
   296127
 $cargo run --example syncat testdata/jquery.js | grep leastmatch | wc -l
-   Compiling syntect v0.6.0 (file:///Users/tristan/Box/Dev/Projects/syntect)
+   Compiling syntect-patched v0.6.0 (file:///Users/tristan/Box/Dev/Projects/syntect-patched)
      Running `target/debug/examples/syncat testdata/jquery.js`
   137842
 # With search caching
 $cargo run --example syncat testdata/jquery.js | grep searchcached | wc -l
-   Compiling syntect v0.6.0 (file:///Users/tristan/Box/Dev/Projects/syntect)
+   Compiling syntect-patched v0.6.0 (file:///Users/tristan/Box/Dev/Projects/syntect-patched)
      Running `target/debug/examples/syncat testdata/jquery.js`
  2440527
 $cargo run --example syncat testdata/jquery.js | grep regsearch | wc -l
